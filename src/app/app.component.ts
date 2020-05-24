@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import { Post } from './posts/post.model'
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,9 +7,5 @@ import { Post } from './posts/post.model'
 })
 export class AppComponent {
   title = 'front-angular';
-  storedPosts: Post[] = [];
 
-  onPostAdded(post: Post) {
-    this.storedPosts.push(post);
-  }
 }
