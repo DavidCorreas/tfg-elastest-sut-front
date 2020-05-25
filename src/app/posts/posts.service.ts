@@ -1,7 +1,9 @@
-import { Post } from './post.model'
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+
+import { Post } from './post.model'
 
 // Solo creara una instancia de esto en la app
 // Tambien se puede quitar este decorator y meter 'PostsService' en el appModule, en el array de providers
@@ -13,9 +15,19 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts() {
-    this.http.get<{message: string, posts: Post[]}>('http://localhost:3000/api/posts')
-      .subscribe((postData) => {
-        this.posts = postData.posts;
+    this.http
+      .get<{message: string, posts: any}>('http://localhost:3000/api/posts')
+      .pipe(map((postsData) => {
+        return postsData.posts.map(post => {
+          return {
+            title: post.title,
+            content: post.content,
+            id: post.id
+          }
+        })
+      }))
+      .subscribe((transPosts) => {
+        this.posts = transPosts;
         this.postsUpdated.next([...this.posts])
       });
   }
