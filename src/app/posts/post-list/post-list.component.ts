@@ -18,14 +18,17 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   posts: Post[] = [];
   private postSub: Subscription;
+  isLoading = false;
 
   // Para tener un objeto en la clase, se puede igualar postsService en el contructor a un atributo de la clase
   // o poner delante la palabra public
   constructor(public postsService: PostsService) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.postsService.getPosts();
     this.postSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
+      this.isLoading = false;
       this.posts = posts;
     });
   }
