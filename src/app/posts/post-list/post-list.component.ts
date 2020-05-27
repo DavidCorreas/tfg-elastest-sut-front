@@ -22,6 +22,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   isLoading = false;
   totalPost = 10;
   postPerPage = 2;
+  currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
 
   // Para tener un objeto en la clase, se puede igualar postsService en el contructor a un atributo de la clase
@@ -30,7 +31,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.postsService.getPosts();
+    this.postsService.getPosts(this.postPerPage, this.currentPage);
     this.postSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
       this.isLoading = false;
       this.posts = posts;
@@ -38,7 +39,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onChangedPage(pageData: PageEvent) {
-    
+    this.currentPage = pageData.pageIndex + 1;
+    this.postPerPage = pageData.pageSize;
+    this.postsService.getPosts(this.postPerPage, this.currentPage);
   }
 
   onDelete(postId: string) {
