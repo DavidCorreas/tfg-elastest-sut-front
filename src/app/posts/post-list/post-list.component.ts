@@ -8,7 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.css']
+  styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit, OnDestroy {
   // posts = [
@@ -32,20 +32,27 @@ export class PostListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.postsService.getPosts(this.postPerPage, this.currentPage);
-    this.postSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
-      this.isLoading = false;
-      this.posts = posts;
-    });
+    this.postSub = this.postsService
+      .getPostUpdateListener()
+      .subscribe((postData: {posts: Post[], postCount: number}) => {
+        this.isLoading = false;
+        this.posts = postData.posts;
+        this.totalPost = postData.postCount;
+      });
   }
 
   onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.postPerPage = pageData.pageSize;
     this.postsService.getPosts(this.postPerPage, this.currentPage);
   }
 
   onDelete(postId: string) {
-    this.postsService.deletePost(postId);
+    this.isLoading = true;
+    this.postsService.deletePost(postId).subscribe(() => {
+      this.postsService.getPosts(this.postPerPage, this.currentPage);
+    });
   }
 
   ngOnDestroy() {
