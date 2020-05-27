@@ -46,11 +46,13 @@ export class PostCreateComponent implements OnInit {
               imagePath: postData.imagePath
             }
             this.isLoading = false;
+            this.imagePreview = this.post.imagePath;
             this.form.setValue({
               title: this.post.title,
               content: this.post.content,
               image: this.post.imagePath
             });
+
           });
       } else {
         this.mode = 'create';
