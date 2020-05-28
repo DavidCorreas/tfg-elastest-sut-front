@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -19,6 +20,8 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   posts: Post[] = [];
   private postSub: Subscription;
+  private authListenerSubs: Subscription;
+  userIsAuthenticated = false;
   isLoading = false;
   totalPost = 10;
   postPerPage = 2;
@@ -27,18 +30,27 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   // Para tener un objeto en la clase, se puede igualar postsService en el contructor a un atributo de la clase
   // o poner delante la palabra public
-  constructor(public postsService: PostsService) {}
+  constructor(
+    public postsService: PostsService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
     this.postsService.getPosts(this.postPerPage, this.currentPage);
     this.postSub = this.postsService
       .getPostUpdateListener()
-      .subscribe((postData: {posts: Post[], postCount: number}) => {
+      .subscribe((postData: { posts: Post[]; postCount: number }) => {
         this.isLoading = false;
         this.posts = postData.posts;
         this.totalPost = postData.postCount;
       });
+    this.authListenerSubs = this.authService
+      .getAuthStatusListener()
+      .subscribe((isAuthenticated) => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
+    this.userIsAuthenticated = this.authService.getIsAuth();
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -57,5 +69,6 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postSub.unsubscribe();
+    this.authListenerSubs.unsubscribe();
   }
 }
