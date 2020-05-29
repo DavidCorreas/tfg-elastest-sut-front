@@ -3,8 +3,10 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-
+import { environment } from '../../environments/environment';
 import { Post } from './post.model';
+
+const BACKEND_URL = environment.apiUrl + '/posts';
 
 // Solo creara una instancia de esto en la app
 // Tambien se puede quitar este decorator y meter 'PostsService' en el appModule, en el array de providers
@@ -19,7 +21,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:3000/api/posts/' + queryParams
+        BACKEND_URL + '/' + queryParams
       )
       .pipe(
         map((postsData) => {
@@ -57,7 +59,7 @@ export class PostsService {
       content: string,
       imagePath: string,
       creator: string
-    }>('http://localhost:3000/api/posts/' + postId);
+    }>(BACKEND_URL + '/' + postId);
   }
 
   addPost(title: string, content: string, image: File) {
@@ -67,7 +69,7 @@ export class PostsService {
     postData.append('image', image, title);
     this.http
       .post<{ post: Post; message: string }>(
-        'http://localhost:3000/api/posts',
+        BACKEND_URL,
         postData
       )
       .subscribe(() => {
@@ -99,7 +101,7 @@ export class PostsService {
     }
     this.http
       .put<{ message: string; imagePath: string }>(
-        'http://localhost:3000/api/posts/' + postId,
+        BACKEND_URL + '/' + postId,
         postData
       )
       .subscribe(() => {
@@ -109,6 +111,6 @@ export class PostsService {
 
   deletePost(postId: string) {
      return this.http
-      .delete<{ message: string }>('http://localhost:3000/api/posts/' + postId);
+      .delete<{ message: string }>(BACKEND_URL + '/' + postId);
   }
 }
