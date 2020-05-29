@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { AuthData } from './auth-data.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { MatExpansionPanelDescription } from '@angular/material/expansion';
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +39,10 @@ export class AuthService {
     };
     this.http
       .post('http://localhost:3000/api/user/singup', authData)
-      .subscribe(response => {
-        console.log(response);
-        this.router.navigate(['/login']);
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      }, () => {
+        this.authStatusListener.next(false);
       });
   }
 
@@ -70,6 +70,8 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(['/']);
         }
+      }, () => {
+        this.authStatusListener.next(false);
       });
   }
 
