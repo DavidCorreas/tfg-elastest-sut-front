@@ -37,7 +37,7 @@ export class PostsService {
           };
         })
       )
-      .subscribe((transPostsData) => {
+      .subscribe(transPostsData => {
         this.posts = transPostsData.posts;
         this.postsUpdated.next({
           posts: [...this.posts],
