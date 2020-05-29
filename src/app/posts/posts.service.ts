@@ -52,10 +52,11 @@ export class PostsService {
 
   getPost(postId: string) {
     return this.http.get<{
-      _id: string;
-      title: string;
-      content: string;
-      imagePath: string;
+      _id: string,
+      title: string,
+      content: string,
+      imagePath: string,
+      creator: string
     }>('http://localhost:3000/api/posts/' + postId);
   }
 
@@ -93,6 +94,7 @@ export class PostsService {
         title: title,
         content: content,
         imagePath: image,
+        creator: null
       };
     }
     this.http
