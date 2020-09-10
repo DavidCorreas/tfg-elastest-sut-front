@@ -27,6 +27,9 @@ export class PostsService {
         map((postsData) => {
           return {
             posts: postsData.posts.map((post) => {
+              if (environment.apiUrl.includes('localhost')) {
+                post.imagePath = post.imagePath.replace('express', 'localhost');
+              }
               return {
                 title: post.title,
                 content: post.content,
@@ -59,7 +62,13 @@ export class PostsService {
       content: string,
       imagePath: string,
       creator: string
-    }>(BACKEND_URL + '/' + postId);
+    }>(BACKEND_URL + '/' + postId)
+    .pipe(map((postData) => {
+      if (environment.apiUrl.includes('localhost')) {
+        postData.imagePath = postData.imagePath.replace('express', 'localhost');
+      }
+      return postData;
+    }));
   }
 
   addPost(title: string, content: string, image: File) {
