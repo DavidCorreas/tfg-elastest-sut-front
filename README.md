@@ -1,27 +1,61 @@
-# FrontAngular
+# TFG-ELASTEST-SUT-FRONT
+En este repositorio se encuentra la aplicación Angular de la [aplicación hecha con
+ stack MEAN][tfg-elastest]. Es un proyecto generado con 
+ [Angular CLI](https://github.com/angular/angular-cli) versión 9.1.5. 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
+## Objetivos
+Provee un frontend web hecho con Angular el cual se conectará con el [backend de está 
+apliación][tfg-elastest-sut-back].
 
-## Development server
+Está disenada para ser desplegado junto al resto de la apliación, ya que buscará el 
+_endpoint_ del backend por `localhost:3000`.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Componentes
+Se trata de una aplicación Angular estandar por lo que su estructura será igual
+a cualquier proyecto Angular. Únicamente se comentará configuraciones que se puedan
+modificar para modificar la apliación.
 
-## Code scaffolding
+### Variables de entorno
+Puede ser necesario cambiar alguna variable de entorno para poder modificar el 
+comportamiento de la aplicación. Este es el caso de querer modificar el endpoint 
+del backend, si ha sido desplegado en otra máquina que no haya sido la local.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Estos ficheros de configuración de las variables de entorno se encuentran en el
+directorio `./src/environments`. Se encuentran dos ficheros:
+- environment.prod.ts:Para que el proyecto se despliegue con estas variables
+es necesaro desplegarlo con el comando: `ng build --configuration production`
+- environment.ts: Para que el proyecto se despliegue con las variables por defecto. 
+Estas son las variables que se usarán cuando se construya la aplicación y definen el 
+backend en `localhost:3000`
 
-## Build
+## Despliegue
+Se mostrarán varias formas de desplegar la aplicación Angular.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Docker
+Para desplegar la aplicación con docker se ha proporcionado un dockerfile en la raíz
+del proyecto. Para desplegarlo:
 
-## Running unit tests
+`cd tfg-elastest-front`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+`docker build -t angular-front .`
 
-## Running end-to-end tests
+`docker run -p 4200:4200 angular-front`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Servidor de desarrollo
+Para que node nos despliegue un servidor automáticamente en nuestra máquina para proporcionarnos
+la página:
 
-## Further help
+`ng serve` 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Navegar a `http://localhost:4200/`. La aplicacións se recargará automáticamente en cuanto se modifiquen
+ficheros
+
+### Construcción
+
+`ng build` para construir el proyecto.
+
+Los artefactos de la aplicación se guardarán en `dist/`. Usa el `--prod` para construirlo en
+modo producción.
+
+[tfg-elastest]: https://github.com/DavidCorreas/tfg-elastest
+[tfg-elastest-sut-back]: https://github.com/DavidCorreas/tfg-elastest-sut-back.git
